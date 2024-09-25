@@ -1,30 +1,36 @@
 import streamlit as st
-from langchain import PromptTemplate, LLMChain
-from llm_models import load_llm  # Assuming a function to load an LLM
+import openai
 
-# Custom CSS for styling
-st.markdown("""
-<style>
-.st-bb {
-    background-color: #f5f5f5;
-}
-</style>
-""", unsafe_allow_html=True)
+# Replace 'YOUR_API_KEY' with your actual OpenAI API key
+openai.api_key = "AIzaSyCo58UahbPRuw6iO578VUNeYNMj_Ybe-qs"
 
-def generate_campaign_statement(
-    club_name,
-    club_brief,
-    event_name,
-    event_description,
-    chief_guest_name,
-    chief_guest_designation,
-    dates,
-    venue,
-    target_audience,
-    tone,
-    other_points
-):
-    # ... (same as before)
+def generate_campaign(club_name, club_brief, event_name, event_description, chief_guest, chief_guest_designation, event_date, event_venue, target_audience, tone, additional_notes):
+    prompt = f"""
+    **Club:** {club_name}
+    **Brief:** {club_brief}
+    **Event:** {event_name}
+    **Description:** {event_description}
+    **Chief Guest:** {chief_guest}, {chief_guest_designation}
+    **Date:** {event_date}
+    **Venue:** {event_venue}
+    **Target Audience:** {target_audience}
+    **Tone:** {tone}
+    **Additional Notes:** {additional_notes}
+
+    Create a compelling invitation campaign statement for this event.
+    """
+
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=1024,
+        n=1,
+        stop=None,
+        temperature=0.7
+    )
+
+    return response.choices[0].text  
+
 
 def main():
     st.title("Campus Event Campaigner")
@@ -34,22 +40,20 @@ def main():
         club_brief = st.text_input("Club Brief")
         event_name = st.text_input("Event Name")
         event_description = st.text_input("Event Description")
-        chief_guest_name = st.text_input("Chief Guest Name")
+        chief_guest = st.text_input("Chief Guest")
         chief_guest_designation = st.text_input("Chief Guest Designation")
-        dates = st.date_input("Dates")
-        venue = st.text_input("Venue")
+        event_date = st.date_input("Event Date")
+        event_venue = st.text_input("Event Venue")
         target_audience = st.text_input("Target Audience")
         tone = st.selectbox("Tone", ["Informative", "Exciting", "Persuasive"])
-        other_points = st.text_area("Other Points")
+        additional_notes = st.text_area("Additional Notes")
 
         submitted = st.form_submit_button("Generate Campaign")
 
     if submitted:
-        campaign_statement = generate_campaign_statement(
-            # ... (same as before)
-        )
+        campaign = generate_campaign(club_name, club_brief, event_name, event_description, chief_guest, chief_guest_designation, event_date, event_venue, target_audience, tone, additional_notes)
         st.success("Campaign Statement Generated:")
-        st.markdown(campaign_statement)
+        st.markdown(campaign)
 
 if __name__ == "__main__":
     main()
