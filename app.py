@@ -2,7 +2,7 @@ import streamlit as st
 import openai
 
 # Replace 'YOUR_API_KEY' with your actual OpenAI API key
-openai.api_key = "AIzaSyCo58UahbPRuw6iO578VUNeYNMj_Ybe-qs"
+openai.api_key = "AIzaSyBQZbJTd2UsAInQN-MhaRNATQ8cchnipYM"
 
 def generate_campaign(club_name, club_brief, event_name, event_description, chief_guest, chief_guest_designation, event_date, event_venue, target_audience, tone, additional_notes):
     prompt = f"""
